@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "375806183679",
+    "project_id": "chit-list-9ef88",
+    "storage_bucket": "chit-list-9ef88.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375806183679:android:a2bfa2924ae49159d664ca",
+        "android_client_info": {
+          "package_name": "com.chitlist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-nu0A6hRivmrlbLflARKGSHtsIu3YHoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
