@@ -12,10 +12,7 @@ function sendToken(user, req, res) {
   );
 
   let clientType = req.headers?.['x-client-type'];
-  console.log(
-    '<<========= user-agent ==========>>>',
-    req.headers?.['user-agent']
-  );
+  console.log('===== x-client-type ==========>>>', clientType);
 
   // send token as response for mobile app
   if (clientType === 'Native-App') {
@@ -28,7 +25,10 @@ function sendToken(user, req, res) {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+        expires: new Date(
+          Date.now() +
+            (parseInt(process.env.JWT_EXPIRE) || 3) * 24 * 60 * 60 * 1000
+        ),
       })
       .json({
         success: true,
