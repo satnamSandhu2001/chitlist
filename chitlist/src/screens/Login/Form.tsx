@@ -28,6 +28,9 @@ const Form = () => {
   const handleInputChange = (field: keyof FormData) => (value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+  // filter validation error
+  const getFieldError = (fieldName: keyof FormData) =>
+    errors?.find(err => err.path?.[0] === fieldName)?.message;
 
   const handleLoginSubmit = async () => {
     try {
@@ -69,7 +72,7 @@ const Form = () => {
         keyboardType="email-address"
         placeholder="Your email"
         icon="person"
-        error={errors?.find(err => err.path?.[0] === 'email')?.message}
+        error={getFieldError('password')}
         autoComplete="email"
       />
       <InputWithIcon
@@ -77,7 +80,7 @@ const Form = () => {
         onChangeText={handleInputChange('password')}
         placeholder="Password"
         icon="lock-closed"
-        error={errors?.find(err => err.path?.[0] === 'password')?.message}
+        error={getFieldError('password')}
         secureTextEntry={true}
       />
       {/* <Link to={{ screen: SCREENS.Signup }} style={{ textAlign: 'right' }}> */}
