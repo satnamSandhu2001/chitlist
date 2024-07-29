@@ -6,19 +6,19 @@ import { Alert } from 'react-native';
 import keychain from 'react-native-keychain';
 import { ZodIssue } from 'zod';
 
-type User = {
+type IUser = {
   id: number | string;
   email: string;
   name: string;
   fcmToken?: string | null;
 };
-type LoginProps = { email: string; password: string };
+type ILoginProps = { email: string; password: string };
 type ContextProps = {
   loading: boolean;
   isAuth: boolean;
-  user: null | User;
+  user: null | IUser;
   errors: null | ZodIssue[];
-  login: ({ email, password }: LoginProps) => Promise<void>;
+  login: ({ email, password }: ILoginProps) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -38,7 +38,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setloading] = React.useState<ContextProps['loading']>(false);
   const [errors, seterrors] = useState<ContextProps['errors']>(null);
 
-  const login = async (formData: LoginProps) => {
+  const login = async (formData: ILoginProps) => {
     try {
       setloading(true);
       seterrors(null);
@@ -52,7 +52,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         url: API_BASE_URL + '/api/v1/auth/login',
         data: validate.data,
         headers: {
-          'x-client-type': 'Native-App',
+          'x-client-type': 'native-app',
         },
       });
       setuser(response.data.user);
@@ -80,7 +80,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         url: API_BASE_URL + '/api/v1/auth/logout',
 
         headers: {
-          'x-client-type': 'Native-App',
+          'x-client-type': 'native-app',
         },
       });
       setuser(null);
@@ -96,6 +96,32 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const getMyData = async () => {
+    try {
+      let token = await keychain.getGenericPassword();
+      if (!token) {
+        return;
+      }
+      let response: IUser = await axios({
+        method: 'get',
+        url: API_BASE_URL + '/api/v1/user/me',
+        headers: {
+          'x-client-type': 'native-app',
+          authorization: `Bearer ${token.password}`,
+        },
+      });
+      setuser(response);
+    } catch (err: any) {
+      if (err.code === 'ERR_NETWORK') {
+        Alert.alert('Please check your Internet connection!');
+      }
+    } finally {
+      setloading(false);
+    }
+  };
+  React.useEffect(() => {
+    getMyData();
+  }, []);
   return (
     <UserContext.Provider
       value={{ user, isAuth: !!user, errors, loading, login, logout }}>

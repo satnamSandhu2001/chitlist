@@ -13,7 +13,7 @@ module.exports = (err, req, res, next) => {
   err.message = err.message || 'Internal Server Error';
 
   // Invalid JWT token
-  if (err.name === 'jsonwebtoken') {
+  if (err.name === 'JsonWebTokenError') {
     err = new ErrorHandler(401, 'Invalid Authentication Token! Please Login');
   }
 
@@ -36,6 +36,12 @@ module.exports = (err, req, res, next) => {
         err = new ErrorHandler(409, 'Resource already available');
         break;
     }
+  }
+
+  // Default handler for unhandled errors
+  if (!(err instanceof ErrorHandler)) {
+    console.log('=====UNHANDLED ERROR=====');
+    err = new ErrorHandler(500, 'Internal server error');
   }
 
   res.status(err.statusCode).json(err.message);

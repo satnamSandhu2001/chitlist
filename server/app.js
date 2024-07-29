@@ -6,6 +6,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/api/v1/auth', require('./routes/auth.routes'));
+app.use('/api/v1/user', require('./routes/user.routes'));
 
 app.use(errorMiddleware);
 

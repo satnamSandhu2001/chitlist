@@ -11,11 +11,11 @@ function sendToken(user, req, res) {
     }
   );
 
-  let clientType = req.headers?.['x-client-type'];
+  let clientType = req.headers['x-client-type'];
   console.log('===== x-client-type ==========>>>', clientType);
 
   // send token as response for mobile app
-  if (clientType === 'Native-App') {
+  if (clientType === 'native-app') {
     return res.status(201).json({ user, token });
   } else {
     // set cookie for browsers
