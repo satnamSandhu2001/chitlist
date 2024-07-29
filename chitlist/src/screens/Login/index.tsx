@@ -4,6 +4,8 @@ import { Image, View } from 'react-native';
 import Paragraph from '../../components/Paragraph';
 import Heading from '../../components/Heading';
 import Form from './Form';
+import { Link } from '@react-navigation/native';
+import { SCREENS } from '../../constants/screens';
 
 const Login = () => {
   return (
@@ -15,6 +17,11 @@ const Login = () => {
             className="w-full h-full object-cover bg-transparent shadow-xl shadow-black rounded-b-[170px] mx-auto"
           />
         </View>
+        <Link
+          to={'/' + SCREENS.Profile}
+          style={{ backgroundColor: 'skyblue', padding: 20 }}>
+          Profile
+        </Link>
 
         <View className="px-4 pt-8 pb-12">
           <Heading

@@ -1,4 +1,5 @@
 export const SCREENS = {
-  Login: 'Login' as const,
-  Signup: 'Signup' as const,
-};
+  Login: 'Login',
+  Signup: 'Signup',
+  Profile: 'Profile',
+} as const;

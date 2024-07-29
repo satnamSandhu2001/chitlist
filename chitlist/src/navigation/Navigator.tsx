@@ -2,23 +2,31 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SCREENS } from '../constants/screens';
+import { Profile } from '../screens/Profile';
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
+import { UserContext } from '../context/UserContext';
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
+  const { isAuth } = React.useContext(UserContext);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={SCREENS.Login}
         screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name={SCREENS.Login}
-          component={Login}
-          options={{ title: 'Welcome' }}
-        />
-        <Stack.Screen name={SCREENS.Signup} component={Signup} />
+        {!isAuth ? (
+          <>
+            <Stack.Screen name={SCREENS.Login} component={Login} />
+            <Stack.Screen name={SCREENS.Signup} component={Signup} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name={SCREENS.Profile} component={Profile} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
