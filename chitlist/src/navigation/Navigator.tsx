@@ -6,6 +6,7 @@ import { Profile } from '../screens/Profile';
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
 import { UserContext } from '../context/UserContext';
+import BootSplash from 'react-native-bootsplash';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +14,7 @@ const Navigator = () => {
   const { isAuth } = React.useContext(UserContext);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer onReady={() => BootSplash.hide({ fade: true })}>
       <Stack.Navigator
         initialRouteName={SCREENS.Login}
         screenOptions={{ headerShown: false }}>
