@@ -4,13 +4,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { COLORS } from '../constants/colors';
 
-type Props = PropsWithChildren<{
+type IProps = PropsWithChildren<{
   name: string;
   color?: string;
   size?: number;
 }>;
 
-const Icons = ({ name, color, size }: Props) => {
+const Icons = ({ name, color, size }: IProps) => {
   return (
     <Icon name={name} color={color || COLORS['dark-100']} size={size || 25} />
   );

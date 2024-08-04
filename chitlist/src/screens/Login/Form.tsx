@@ -4,7 +4,7 @@ import InputWithIcon from '../../components/InputWithIcon';
 import Paragraph from '../../components/Paragraph';
 import { SCREENS } from '../../constants/screens';
 import { Link } from '@react-navigation/native';
-import ButtonSecondary from '../../components/ButtonSecondary';
+import Button from '../../components/Button';
 import { UserContext } from '../../context/UserContext';
 
 type FormData = {
@@ -38,7 +38,7 @@ const Form = () => {
         keyboardType="email-address"
         placeholder="Your email"
         icon="person"
-        error={getFieldError('password')}
+        error={getFieldError('email')}
         autoComplete="email"
       />
       <InputWithIcon
@@ -56,7 +56,8 @@ const Form = () => {
       {/* </Link> */}
 
       <View>
-        <ButtonSecondary
+        <Button
+          variant="secondary"
           onPress={handleLoginSubmit}
           title="LOGIN"
           loading={loading}

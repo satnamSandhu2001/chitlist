@@ -40,7 +40,7 @@ module.exports = (err, req, res, next) => {
 
   // Default handler for unhandled errors
   if (!(err instanceof ErrorHandler)) {
-    console.log('=====UNHANDLED ERROR=====');
+    console.log('↗️=====UNHANDLED ERROR=====↖️');
     err = new ErrorHandler(500, 'Internal server error');
   }
 

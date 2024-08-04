@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { loginSchema } from '../utils/zod/loginSchema';
-import axios from 'axios';
-import { API_BASE_URL } from '../utils/config';
+import { loginSchema } from '../utils/zod/userSchema';
 import { Alert } from 'react-native';
 import keychain from 'react-native-keychain';
 import { ZodIssue } from 'zod';
+import api from '../utils/api';
 
 type IUser = {
   id: number | string;
@@ -20,6 +19,7 @@ type ContextProps = {
   errors: null | ZodIssue[];
   login: ({ email, password }: ILoginProps) => Promise<void>;
   logout: () => Promise<void>;
+  getMyData: () => Promise<void>;
 };
 
 const initialValue: ContextProps = {
@@ -29,6 +29,7 @@ const initialValue: ContextProps = {
   errors: null,
   login: async () => {},
   logout: async () => {},
+  getMyData: async () => {},
 };
 
 export const UserContext = React.createContext<ContextProps>(initialValue);
@@ -47,16 +48,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         seterrors(validate.error.issues);
         return;
       }
-      let response = await axios({
-        method: 'post',
-        url: API_BASE_URL + '/api/v1/auth/login',
-        data: validate.data,
-        headers: {
-          'x-client-type': 'native-app',
-        },
-      });
+      let response = await api.post('/api/v1/auth/login', formData);
       setuser(response.data.user);
-
       await keychain.setGenericPassword('token', response.data.token);
     } catch (err: any) {
       setuser(null);
@@ -75,14 +68,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     try {
       setloading(true);
-      await axios({
-        method: 'get',
-        url: API_BASE_URL + '/api/v1/auth/logout',
-
-        headers: {
-          'x-client-type': 'native-app',
-        },
-      });
+      await api.get('/api/v1/auth/logout');
       setuser(null);
       await keychain.resetGenericPassword();
     } catch (err: any) {
@@ -102,15 +88,8 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
       if (!token) {
         return;
       }
-      let response: IUser = await axios({
-        method: 'get',
-        url: API_BASE_URL + '/api/v1/user/me',
-        headers: {
-          'x-client-type': 'native-app',
-          authorization: `Bearer ${token.password}`,
-        },
-      });
-      setuser(response);
+      let { data } = await api('/api/v1/user/me');
+      setuser(data);
     } catch (err: any) {
       if (err.code === 'ERR_NETWORK') {
         Alert.alert('Please check your Internet connection!');
@@ -124,7 +103,15 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
   return (
     <UserContext.Provider
-      value={{ user, isAuth: !!user, errors, loading, login, logout }}>
+      value={{
+        user,
+        isAuth: !!user,
+        errors,
+        loading,
+        login,
+        logout,
+        getMyData,
+      }}>
       {children}
     </UserContext.Provider>
   );

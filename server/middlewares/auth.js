@@ -7,6 +7,7 @@ exports.isAuth = async (req, res, next) => {
   try {
     let token;
     let clientType = req.headers['x-client-type'];
+    console.log('===== x-client-type ==========>>>', clientType);
     if (clientType == 'native-app') {
       token = req.headers['authorization']?.split(' ')[1];
     } else {

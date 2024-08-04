@@ -13,9 +13,19 @@ const registerSchema = loginSchema
     name: z.string().min(1, 'Name is required'),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword'],
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Passwords don't match",
+        path: ['confirmPassword'],
+      });
+    }
   });
 
-module.exports = { loginSchema, registerSchema };
+const updateDetailsSchema = z.object({
+  email: z.string().toLowerCase().email({ message: 'Invalid email address' }),
+  name: z.string().min(1, 'Name is required'),
+});
+
+module.exports = { loginSchema, registerSchema, updateDetailsSchema };
